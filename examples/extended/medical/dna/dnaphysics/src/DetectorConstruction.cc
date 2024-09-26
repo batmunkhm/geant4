@@ -93,6 +93,23 @@ void DetectorConstruction::DefineMaterials()
   G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 }
 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+G4Material* 
+DetectorConstruction::MaterialWithDensity(G4String name, G4double density)
+{
+  // Water is defined from NIST material database
+  G4NistManager* man = G4NistManager::Instance();
+  
+  G4Material * material = man->BuildMaterialWithNewDensity(name,
+   "G4_WATER", density);
+
+   G4cout << "-> Density of water_modified material (g/cm3)="
+    << material->GetDensity()/(g/cm/cm/cm) << G4endl;
+   
+ return material;
+}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
@@ -103,7 +120,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   DefineMaterials();
 
   // World volume
-  G4double worldSizeX = 100 * micrometer;
+  G4double worldSizeX = fWorldSize;
   G4double worldSizeY = worldSizeX;
   G4double worldSizeZ = worldSizeX;
 
@@ -150,4 +167,12 @@ void DetectorConstruction::SetMaterial(const G4String& materialChoice)
     }
     G4RunManager::GetRunManager()->GeometryHasBeenModified();
   }
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void DetectorConstruction::SetSize(G4double value)
+{
+  fWorldSize = value;
+  G4RunManager::GetRunManager()->ReinitializeGeometry();
 }
