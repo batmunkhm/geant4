@@ -58,9 +58,20 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     ~DetectorConstruction() override;
     G4VPhysicalVolume* Construct() override;
 
+    void SetDensity(G4double);   
+    void SetSize(G4double);   
     void SetMaterial(const G4String&);
 
+  public:  
+                    
+    G4Material* 
+    MaterialWithDensity(G4String, G4double); 
+    G4double GetSize() {return fWorldSize;};
+     
   private:
+  
+    G4double fWorldSize = 0.;
+    
     void DefineMaterials();
 
     DetectorMessenger* fDetectorMessenger;
